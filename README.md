@@ -1,2 +1,10 @@
+# page-loader
+
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/behindthep/php-phpunit-testing-project-75/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/behindthep/php-phpunit-testing-project-75/actions)
+
+### Demo:
+
+```bash
+page-loader 
+```
