@@ -3,14 +3,18 @@
     "description": "Page loader",
     "type": "library",
     "license": "MIT",
-    "autoload": {
-        "psr-4": {
-            "Downloader\\": "src/"
-        }
-    },
     "bin": [
         "bin/page-loader"
     ],
+    "autoload": {
+        "psr-4": {
+            "Downloader\\": "src/"
+        },
+        "files": [
+            "src/Downloader.php",
+            "src/Formatters/UrlFormatter.php"
+        ]
+    },
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
@@ -25,7 +29,8 @@
     "minimum-stability": "stable",
     "require": {
         "guzzlehttp/guzzle": "^7.9",
-        "imangazaliev/didom": "^2.0"
+        "imangazaliev/didom": "^2.0",
+        "docopt/docopt": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^12",

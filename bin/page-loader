@@ -1,23 +1,29 @@
-#!usr/bin/env php 
+#!/usr/bin/env php
 <?php
 
-$autoloadPath1 = __DIR__ . '/../../../autoload.php';
-$autoloadPath2 = __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
-if (file_exists($autoloadPath1)) {
-    require_once $autoloadPath1;
-} else {
-    require_once $autoloadPath2;
-}
+use function Downloader\Downloader\downloadPage;
 
-use Downloader\Downloader;
-use Tests\FakeClient;
+$doc = <<<DOC
+Generate page-loader
 
-$url = 'http://example.com';
-$outputPath = '/tmp/example';
-$filePath = downloadPage($url, $outputPath); // /tmp/example/example-com.html
+Usage:
+  page-loader (-h|--help)
+  page-loader (-v|--version)
+  page-loader <url> [-o <dir>]
 
-$url = 'http://example.com';
-$outputPath = '/tmp/example';
-$clientClass = FakeClient::class;
-downloadPage($url, outputPath, $clientClass);
+Options:
+  -h --help                 Show this screen
+  -v --version              Show version
+  -o --output <dir>         output dir [default: ./]
+DOC;
+
+$args = Docopt::handle($doc, ['version' => '1.0']);
+$output = $args['--output'];
+$url = $args['<url>'];
+
+$clientClass = \GuzzleHttp\Client::class;
+
+$res = downloadPage($url, $output, $clientClass);
+print_r($res);
