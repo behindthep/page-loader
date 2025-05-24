@@ -8,5 +8,5 @@
 ### Demo:
 
 ```bash
-bin/page-loader https://ru.hexlet.io/courses -o /test
+bin/page-loader https://ru.hexlet.io/courses -o /var/tmp
 ```

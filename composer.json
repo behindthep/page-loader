@@ -11,8 +11,7 @@
             "Downloader\\": "src/"
         },
         "files": [
-            "src/Downloader.php",
-            "src/Formatters/UrlFormatter.php"
+            "src/Downloader.php"
         ]
     },
     "autoload-dev": {

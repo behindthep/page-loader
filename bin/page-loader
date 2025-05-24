@@ -3,27 +3,26 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use function Downloader\Downloader\downloadPage;
+use function Downloader\downloadPage;
 
-$doc = <<<DOC
-Generate page-loader
-
+$doc = <<<'DOCOPT'
 Usage:
-  page-loader (-h|--help)
-  page-loader (-v|--version)
-  page-loader <url> [-o <dir>]
+  page-loader <url> [-o <output>]
+  page-loader (-h | --help)
 
 Options:
-  -h --help                 Show this screen
-  -v --version              Show version
-  -o --output <dir>         output dir [default: ./]
-DOC;
+  -o <output> --output <output>  Output directory [default: .]
+  -h --help                        Show this help message.
+DOCOPT;
 
-$args = Docopt::handle($doc, ['version' => '1.0']);
-$output = $args['--output'];
-$url = $args['<url>'];
+$options = Docopt::handle($doc);
 
-$clientClass = \GuzzleHttp\Client::class;
+$url = $options['<url>'];
+$outputPath = $options['-o'] ?? $options['--output'];
 
-$res = downloadPage($url, $output, $clientClass);
-print_r($res);
+if (!$url) {
+    die("URL is required.\n");
+}
+
+$filePath = downloadPage($url, $outputPath);
+echo "Page was successfully downloaded into $filePath\n";

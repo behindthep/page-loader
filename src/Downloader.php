@@ -1,38 +1,26 @@
 <?php
 
-namespace Downloader\Downloader;
+namespace Downloader;
 
-use function Downloader\Formatters\UrlFormatter\formatUrl;
+use GuzzleHttp\Client;
 
-function downloadPage(string $url, string $outputPath, string $clientClass = \GuzzleHttp\Client::class): string
+function downloadPage(string $url, string $outputPath, string $clientClass = Client::class): string
 {
-    $dirPath = getDirPath($outputPath);
+    $parsedUrl = parse_url($url);
+    $host = $parsedUrl['host'] ?? '';
+    $path = trim($parsedUrl['path'] ?? '', '/');
+    $filename = preg_replace('/[^a-zA-Z0-9]+/', '-', $host . ($path ? '-' . $path : '')) . '.html';
 
-    if (!file_exists($dirPath)) {
-        mkdir($dirPath, 0755, true);
+    $filePath = rtrim($outputPath, '/') . '/' . $filename;
+
+    if (!is_dir($outputPath)) {
+        mkdir($outputPath, 0755, true);
     }
 
-    $fileName = formatUrl($url);
-    $filePath = "{$dirPath}/{$fileName}";
+    $client = new $clientClass();
+    $html = $client->get($url)->getBody()->getContents();
 
-    $content = getContent($clientClass, $url);
-    file_put_contents($filePath, $content);
+    file_put_contents($filePath, $html);
 
-    return "Page was successfully downloaded into {$filePath}\n";
-}
-
-function getDirPath(string $outputPath): string
-{
-    $outputPath = trim($outputPath, '/');
-    return realpath(__DIR__ . '/../files/' . $outputPath);
-}
-
-function getContent(string $clientClass, string $url): string
-{
-    try {
-        $client = new $clientClass();
-        return $client->get($url)->getBody()->getContents();
-    } catch (\Exception $e) {
-        exit("Error: {$e->getMessage()}\n");
-    }
+    return $filePath;
 }
