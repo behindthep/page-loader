@@ -7,5 +7,5 @@
 ### Demo:
 
 ```bash
-bin/page-loader https://ru.hexlet.io/courses -o /var/tmp
+bin/page-loader https://example.com -o /var/tmp
 ```
