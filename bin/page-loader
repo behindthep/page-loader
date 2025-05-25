@@ -5,24 +5,26 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use function Downloader\downloadPage;
 
-$doc = <<<'DOCOPT'
+$doc = <<<DOC
 Usage:
+  page-loader (-h|--help)
+  page-loader (-v|--version)
   page-loader <url> [-o <output>]
-  page-loader (-h | --help)
 
 Options:
-  -o <output> --output <output>  Output directory [default: .]
-  -h --help                        Show this help message.
-DOCOPT;
+  -h --help                Show this screen
+  -v --version             Show version
+  -o <output>              Output directory [default: ./]
+DOC;
 
-$options = Docopt::handle($doc);
+$args = Docopt::handle($doc, ['version' => '1.0']);
 
-$url = $options['<url>'];
-$outputPath = $options['-o'] ?? $options['--output'];
+$url = $args['<url>'];
+$outputPath = $args['-o'];
 
-if (!$url) {
-    die("URL is required.\n");
+try {
+  $filePath = downloadPage($url, $outputPath);
+  echo "Page was successfully downloaded into $filePath\n";
+} catch (\Exception $e) {
+  echo $e->getMessage() . "\n";
 }
-
-$filePath = downloadPage($url, $outputPath);
-echo "Page was successfully downloaded into $filePath\n";

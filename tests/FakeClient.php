@@ -4,18 +4,18 @@ namespace Tests;
 
 class FakeClient
 {
-    public function get($url)
+    public function get($url): self
     {
-        return new class {
-            public function getBody()
-            {
-                return new class {
-                    public function getContents()
-                    {
-                        return '<html><body>Fake content</body></html>';
-                    }
-                };
-            }
-        };
+        return $this;
+    }
+
+    public function getBody(): self
+    {
+        return $this;
+    }
+
+    public function getContents(): string
+    {
+        return '<html><body>Fake content</body></html>';
     }
 }

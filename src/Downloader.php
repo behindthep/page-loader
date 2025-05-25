@@ -6,21 +6,28 @@ use GuzzleHttp\Client;
 
 function downloadPage(string $url, string $outputPath, string $clientClass = Client::class): string
 {
-    $parsedUrl = parse_url($url);
-    $host = $parsedUrl['host'] ?? '';
-    $path = trim($parsedUrl['path'] ?? '', '/');
-    $filename = preg_replace('/[^a-zA-Z0-9]+/', '-', $host . ($path ? '-' . $path : '')) . '.html';
-
-    $filePath = rtrim($outputPath, '/') . '/' . $filename;
-
     if (!is_dir($outputPath)) {
         mkdir($outputPath, 0755, true);
     }
 
+    $filename = getFileNameFromUrl($url);
+    $filePath = rtrim($outputPath, '/') . '/' . $filename;
+
     $client = new $clientClass();
-    $html = $client->get($url)->getBody()->getContents();
+    $response = $client->get($url);
+    $html = $response->getBody()->getContents();
 
     file_put_contents($filePath, $html);
 
     return $filePath;
+}
+
+function getFileNameFromUrl(string $url): string
+{
+    $parsedUrl = parse_url($url);
+
+    $host = $parsedUrl['host'] ?? '';
+    $path = $parsedUrl['path'] ?? '';
+
+    return preg_replace('/\W/', '-', $host . $path) . '.html';
 }
